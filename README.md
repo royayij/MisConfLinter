@@ -6,7 +6,7 @@
 
 ## Generate Misconfiguration Rules
 
-The ``` ansible_lint_rule_generator.py``` script automatically generates custom linting rules for each defined configuration type.
+The``` ansible_lint_rule_generator.py```script automatically generates custom linting rules for each defined configuration type.
 
 ## Testing Playbooks by Customized Rules 
 To test your Ansible playbooks against these generated rules, execute the following command:
