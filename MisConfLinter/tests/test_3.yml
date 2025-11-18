@@ -1,0 +1,10 @@
+- name: Example playbook
+  hosts: all
+  tasks:
+    - name: Start service foo, based on running process /usr/bin/foo
+      general.community.rax_clb:
+        vip_id: '255.169.110.255'
+        protocol: 'hi'
+
+
+

@@ -1,0 +1,39 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import re
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+    param_type_value_dep ={{'basic_type'}}
+    param_name = '{{parameter_name}}'
+
+    _modules = ['{{modules_sel}}']
+    inc_dep_dictionary = {{inc_dep_dict}}
+
+
+
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[bool, str]:
+        if task["action"]["__ansible_module__"].split('.')[-1] in self._modules:
+            p_value = task['action'].get('{{parameter_name}}', None)
+            for key in self.inc_dep_dictionary.keys():
+                if key != self.param_name:
+                    key_value = task['action'].get('{{key}}', None)
+                    if (key_value in self.inc_dep_dictionary.get(key)) or (key_value == self.inc_dep_dictionary.get(key)) or (key_value == bool(self.inc_dep_dictionary.get(key))):
+                        if p_value is None:
+                            return True
+                        elif not ((p_value in self.inc_dep_dictionary.get('{{parameter_name}}')) or (p_value == self.inc_dep_dictionary.get('{{parameter_name}}')) or (p_value == bool(self.inc_dep_dictionary.get('{{parameter_name}}')))) or (p_value):
+                            return True
+
+        return False

@@ -1,0 +1,46 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import os
+import re
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+    basic_type = '{{basic_type}}'
+
+    _modules = ['{{modules_sel}}']
+
+    def is_invalid_value_type(self, param_value: {{basic_type}}, des: str) -> bool:
+        if 'ip' in des: # IP
+            return bool(re.match("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4})))?$", param_value))
+        if re.search(r'\bmac address\b', des):
+            return bool(re.match(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', param_value))
+        if re.search(r'\burl\b', des):
+            return bool(re.match(r'^((http|https)://)[-a-zA-Z0-9@:%._\+~#?&//=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%._\+~#?&//=]*)$', param_value))
+        if re.search(r'\b(path|directory)\b', des):
+            return bool(re.match(r'^(\/?[\w\s.-]+\/?)*$', param_value)) # Mac Address
+        if re.search(r'\b(file)\b', des): # file
+            return os.path.isfile(param_value)
+        if re.search(r'\b(hostname)\b', des): # hostname
+            return bool(re.match(r'^[a-zA-Z0-9-]+$', param_value))
+
+	
+
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[bool, str]:
+        if task["action"]["__ansible_module__"].split('.')[-1] in self._modules:
+            value = task['action'].get('{{parameter_name}}', None)
+
+            if not self.is_invalid_value_type(value, '{{semantic_description}}'):
+                return True
+        return False

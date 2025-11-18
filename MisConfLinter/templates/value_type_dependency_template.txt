@@ -1,0 +1,71 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import re
+import json
+import os
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+    param_type_value_dep ={{type_value_dep_dict}}
+    param_name = '{{parameter_name}}'
+    semantic_types = ['hostname', 'ip', 'mac', 'file', 'path', 'directory', 'url']
+
+    _modules = ['{{modules_sel}}']
+
+    def check_type_value(self, param: str, param_type_value_dep: dict, param_value):
+        param_type = param_type_value_dep.get(param, None)
+        if param_type is not None:
+            for type in param_type:
+                if type in self.semantic_types:
+                   if type == 'ip': # IP
+                        return bool(re.match("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4})))?$", param_value))
+                   if type == 'mac':
+                        return bool(re.match(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', param_value))
+                   if type == 'url':
+                        return bool(re.match(r'^((http|https)://)[-a-zA-Z0-9@:%._\+~#?&//=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%._\+~#?&//=]*)$', param_value))
+                   if type == 'path' or type == 'directory':
+                        return bool(re.match(r'^(\/?[\w\s.-]+\/?)*$', param_value)) # Mac Address
+                   if type == 'file': # file
+                        return bool(os.path.isfile(param_value))
+                   if type == 'hostname': # hostname
+                        return bool(re.match(r'^[a-zA-Z0-9-]+$', param_value))
+
+                else:
+                    if type == 'json':
+                        try:
+                            json.loads(param_value)  # Try to parse JSON
+                            return False
+                        except (ValueError, TypeError):
+                            return True
+
+                    if type == 'path':
+                        return not (isinstance(param_value, eval(type)) and (os.path.isabs(param_value) or bool(pathlib.Path(param_value))))
+
+                    if isinstance(param_value, eval(type)):
+                        return True
+
+
+
+    def matchtask(self, task: Dict[str, Any], file: 'Optional[Lintable]' = None) -> Union[bool, str]:
+        if task["action"]["__ansible_module__"].split('.')[-1] in self._modules:
+            if task['action'].get('{{parameter_name}}', None) is not None:
+                p_value = task['action'].get('{{parameter_name}}')
+                for key in self.param_type_value_dep.keys():
+                    if key != self.param_name:
+                        key_value = task['action'].get(key, None)
+                        if self.check_type_value(key, self.param_type_value_dep, key_value):
+                             if not self.check_type_value(self.param_name, self.param_type_value_dep, p_value):
+                                return True
+                        else:
+                            return True
+
+        return False

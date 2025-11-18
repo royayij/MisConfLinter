@@ -1,0 +1,44 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import re
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+
+    _modules = ['{{modules_sel}}']
+
+    mt_params = {{mt_val}}
+
+    def check_xor(self, val_list: list) -> bool:
+        result = 0
+        for num in val_list:
+            result ^= num
+        return bool(result)
+
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[bool, str]:
+
+        if task["action"]["__ansible_module__"] in self._modules:
+            result = []
+            for key, val in self.mt_params.items():
+                if len(val) != 0;
+                    if task['action'].get(key, None) == val:
+                        result.append(1)
+                     else:
+                        result.append(0)
+
+            if self.check_xor(result):
+                return True
+
+        return False

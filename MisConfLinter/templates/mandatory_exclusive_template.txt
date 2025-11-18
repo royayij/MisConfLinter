@@ -1,0 +1,63 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import re
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+
+    _modules = ['{{modules_sel}}']
+
+    xor_params = {{xor_val}}
+
+    def check_xor(self, val_list: list) -> bool:
+        result = 0
+        for num in val_list:
+            result ^= num
+        return bool(result)
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[bool, str]:
+
+        if task["action"]["__ansible_module__"] in self._modules:
+            param_result = []
+            for val in self.xor_params:
+                try:
+                    value_param = task['action'].get(val[0], None)
+                    param_result.append(1)
+                except:
+                    param_result.append(0)
+
+            exclude_param_result = []
+            for val in self.xor_params:
+                if len(val[3]) != 0:
+                    val[2] = val[2] * len(val[3])
+                    for param, param_val in zip(val[2], val[3]):
+                        try:
+                            if task['action'].get(param, None) == param_val:
+                                exclude_param_result.append(1)
+                            else:
+                                exclude_param_result.append(0)
+                        except:
+                            exclude_param_result.append(0)
+                else:
+                    try:
+                        value_ex_param = task['action'].get(val[2], None)
+                        exclude_param_result.append(1)
+                    except:
+                         exclude_param_result.append(0)
+
+            result = param_result.extend(exclude_param_result)
+
+            if self.check_xor(result):
+                return True
+        return False

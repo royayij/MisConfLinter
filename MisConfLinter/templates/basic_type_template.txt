@@ -1,0 +1,50 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import re
+import json
+import os
+import pathlib
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}' + 'on {}/{}',format('{{modules_sel}}', '{{parameter_name}}')
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+
+    _modules = ['{{modules_sel}}']
+
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[bool, str]:
+        if task["action"]["__ansible_module__"].split('.')[-1] in self._modules:
+            value = task['action'].get('{{parameter_name}}', None)
+
+            if '{{basic_type}}' == 'json':
+                try:
+                    json.loads(value)  # Try to parse JSON
+                    return False
+                except (ValueError, TypeError):
+                    return True
+
+            if '{{basic_type}}' == 'path':
+                return not (isinstance(value, str) and (os.path.isabs(value) or bool(pathlib.Path(value))))
+
+            else:
+                if '{{basic_type_item}}' != 'None':
+                    if isinstance(value, eval('{{basic_type}}')):
+                        if '{{basic_type_item}}' != 'any':
+                            for item in value:
+                                return not (isinstance(item, eval('{{basic_type_item}}')))
+                        else:
+                            return False
+                else:
+                    return not isinstance(value, eval('{{basic_type}}'))
+
+        return False

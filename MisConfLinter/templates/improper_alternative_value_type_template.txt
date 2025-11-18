@@ -1,0 +1,32 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+import re
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+
+    _modules = ['{{modules_sel}}']
+
+    imp_alt_param = '{{imp_alt_val}}'
+
+
+
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[bool, str]:
+
+        if task["action"]["__ansible_module__"].split('.')[-1] in self._modules:
+            if task['action'].get(self.imp_alt_param, None) is not None:
+               if task['action'].get('{{parameter_name}}', None) is not None:
+                    return True
+        return False

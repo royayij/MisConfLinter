@@ -1,0 +1,38 @@
+from typing import TYPE_CHECKING, Any, Dict, Union
+# Auto Generated Rules. Do not change manually
+from ansiblelint.rules import AnsibleLintRule
+from ansiblelint.errors import MatchError
+
+import re
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from ansiblelint.file_utils import Lintable
+
+class {{rule_name}}(AnsibleLintRule):
+    id = '{{rule_id}}'
+    shortdesc = '{{rule_desc_short}}'
+    description = '{{rule_desc}}'
+    tags = ['{{misconfiguration_type}}']
+    severity = "LOW"
+
+    _modules = ['{{modules_sel}}']
+
+    imp_params = {{imp_val}}
+
+    def matchtask(
+        self, task: Dict[str, Any], file: 'Optional[Lintable]' = None
+    ) -> Union[list[MatchError], bool]:
+
+        if task["action"]["__ansible_module__"].split('.')[-1] in self._modules:
+            if task['action'].get('{{parameter_name}}', None) in self.imp_params:
+               return [
+                    MatchError(
+                        message="Warning: improper 'multicast_enhance' value.",
+                        filename=file.path if file else None,
+                        lineno=task.get("__line__", 0),
+                        rule=self,
+                    )
+               ]
+        return []
