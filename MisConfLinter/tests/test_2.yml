@@ -1,6 +1,0 @@
-- name: Example playbook
-  hosts: all
-  tasks:
-    - name: "Edit bmc audit log setting"
-      kaytus.ksmanage.edit_log_setting:
-        type: "remote"

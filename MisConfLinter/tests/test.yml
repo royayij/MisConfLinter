@@ -1,9 +1,0 @@
-- name: Example playbook
-  hosts: all
-  tasks:
-    - name: Start service foo, based on running process /usr/bin/foo
-      ansible.builtin.service:
-        name: foo
-        enabled:
-        pattern: /usr/bin/foo
-        state: started
