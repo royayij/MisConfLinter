@@ -5,10 +5,13 @@
 <img width="800" height="637" alt="image" src="https://github.com/user-attachments/assets/67a697b3-20b3-496f-bb33-f98589f7c10b" />
 
 ### Data Collection
-MisConfLinter relies on detailed Ansible module and parameter documentation to detect misconfigurations. You can extract this data using the provided scripts. First, define a list of modules you want to include, then call ```save_to_files()``` to scrape and save module-level and parameter-level datasets.
+MisConfLinter relies on detailed Ansible module and parameter documentation to detect misconfigurations. You can extract this data using the provided scripts:
 
-from misconftypes.scraper import save_to_files
-``` 
+1- Define a list of modules you want to include.
+
+2- Call save_to_files() to scrape and save module-level and parameter-level datasets.
+```
+from ansible_module_documentation import save_to_files
 # List of modules to extract
 modules_list = ['copy', 'file', 'template']
 
@@ -20,9 +23,10 @@ parameter_file_path = 'files/parameter_docs.xlsx'
 save_to_files(modules_list, module_file_path, parameter_file_path)
 
 ```
-After extraction, the parameter data is preprocessed and tokenized, then saved as ```tokenized_parameter_dataset.xlsx```, which is used in subsequent steps to extract MisConfLinter rules.
+After extraction, the parameter data is preprocessed and tokenized, then saved as ```tokenized_parameter_dataset.xlsx```. This dataset is used in the subsequent step to generate MisConfLinter rules.
+
 ``` 
-from misconftypes.scraper import save_preprocessed_parameter_file
+from ansible_module_documentation import save_preprocessed_parameter_file
 import pandas as pd
 
 # Load extracted parameter data
@@ -32,18 +36,18 @@ df_parameter = pd.read_excel('files/parameter_docs.xlsx')
 save_preprocessed_parameter_file(df_parameter)
 ``` 
 ### Generate Misconfiguration Rules
-To automatically generate custom linting rules for each misconfiguration category, you first need to install ```benepar``` and ```NLTK``` libraries as below:
+To automatically generate custom linting rules for each misconfiguration category, install the following libraries:
 ```
 pip install benepar
+pip install nltk
+```
+Then download the Benepar model: 
+```
 import benepar
 benepar.download('benepar_en3')
-```
-and 
-```
-pip install nltk
 
 ```
-Then, running the``` ansible_lint_rule_generator.py``` script automatically generates custom linting rules for each misconfiguration category.
+Next, run the ``` ansible_lint_rule_generator.py ``` script to generate custom linting rules for each misconfiguration category.
 
 ### Testing Playbooks by Customized Rules 
 To test your Ansible playbooks against these generated rules, execute the following command:
