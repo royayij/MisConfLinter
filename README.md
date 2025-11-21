@@ -4,6 +4,30 @@
 
 <img width="800" height="637" alt="image" src="https://github.com/user-attachments/assets/67a697b3-20b3-496f-bb33-f98589f7c10b" />
 
+### Prerequisites
+
+Linux environment: MisConfLinter is tested on Linux and should be run there for compatibility.
+
+Python >= 3.8
+
+Install required Python packages:
+```
+pip install benepar
+pip install nltk
+pip install ansible
+pip install ansible-lint
+```
+Then download the Benepar model: 
+```
+import benepar
+benepar.download('benepar_en3')
+
+```
+Guidelines for the packages:
+- [Benepar documentation](https://github.com/nikitakit/self-attentive-parser)
+- [NLTK documentation](https://www.nltk.org/)
+- [Ansible Lint documentation](https://docs.ansible.com/projects/lint/) 
+
 ### Data Collection
 MisConfLinter relies on detailed Ansible module and parameter documentation to detect misconfigurations. You can extract this data using the provided scripts:
 
@@ -37,16 +61,7 @@ save_preprocessed_parameter_file(df_parameter)
 ``` 
 ### Generate Misconfiguration Rules
 To automatically generate custom linting rules for each misconfiguration category, install the following libraries:
-```
-pip install benepar
-pip install nltk
-```
-Then download the Benepar model: 
-```
-import benepar
-benepar.download('benepar_en3')
 
-```
 Next, run the ``` ansible_lint_rule_generator.py ``` script to generate custom linting rules for each misconfiguration category.
 
 ### Testing Playbooks by Customized Rules 
