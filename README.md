@@ -32,6 +32,17 @@ df_parameter = pd.read_excel('files/parameter_docs.xlsx')
 save_preprocessed_parameter_file(df_parameter)
 ``` 
 ### Generate Misconfiguration Rules
+To automatically generate custom linting rules for each misconfiguration category, you first need to install ```benepar``` and ```NLTK``` libraries as below:
+```
+pip install benepar
+import benepar
+benepar.download('benepar_en3')
+```
+and 
+```
+pip install nltk
+
+```
 
 The``` ansible_lint_rule_generator.py```script automatically generates custom linting rules for each misconfiguration category.
 
