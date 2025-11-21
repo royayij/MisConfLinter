@@ -43,8 +43,7 @@ and
 pip install nltk
 
 ```
-
-The``` ansible_lint_rule_generator.py```script automatically generates custom linting rules for each misconfiguration category.
+Then, running the``` ansible_lint_rule_generator.py``` script automatically generates custom linting rules for each misconfiguration category.
 
 ### Testing Playbooks by Customized Rules 
 To test your Ansible playbooks against these generated rules, execute the following command:
