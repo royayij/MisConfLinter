@@ -36,6 +36,7 @@ MisConfLinter relies on detailed Ansible module and parameter documentation to d
 2- Call save_to_files() to scrape and save module-level and parameter-level datasets.
 ```
 from ansible_module_documentation import save_to_files
+
 # List of modules to extract
 modules_list = ['copy', 'file', 'template']
 
@@ -60,9 +61,8 @@ df_parameter = pd.read_excel('files/parameter_docs.xlsx')
 save_preprocessed_parameter_file(df_parameter)
 ``` 
 ### Generate Misconfiguration Rules
-To automatically generate custom linting rules for each misconfiguration category, install the following libraries:
 
-Next, run the ``` ansible_lint_rule_generator.py ``` script to generate custom linting rules for each misconfiguration category.
+Run the ``` ansible_lint_rule_generator.py ``` script to generate custom linting rules for each misconfiguration category.
 
 ### Testing Playbooks by Customized Rules 
 To test your Ansible playbooks against these generated rules, execute the following command:
